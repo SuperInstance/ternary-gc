@@ -1,0 +1,7 @@
+[package]
+name = "ternary-gc"
+version = "0.1.0"
+edition = "2021"
+description = "Garbage collection for GPU memory with ternary marking. {+1=reachable, 0=maybe-reachable, -1=unreachable}. Mark-sweep with ternary precision."
+license = "Apache-2.0"
+repository = "https://github.com/SuperInstance/ternary-gc"
