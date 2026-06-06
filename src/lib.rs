@@ -45,21 +45,21 @@ impl TernaryGc {
         // Reset all to unreachable
         for mark in self.marks.values_mut() { *mark = Mark::Unreachable; }
 
-        let mut queue: VecDeque<(u64, bool)> = VecDeque::new();
+        let mut queue: VecDeque<u64> = VecDeque::new();
         for &root in &self.roots {
             if self.objects.contains_key(&root) {
                 self.marks.insert(root, Mark::Reachable);
-                queue.push_back((root, true)); // true = direct root child
+                queue.push_back(root);
             }
         }
 
-        while let Some((id, is_direct)) = queue.pop_front() {
+        while let Some(id) = queue.pop_front() {
             if let Some(obj) = self.objects.get(&id) {
                 for &ref_id in &obj.refs {
                     if let Some(mark) = self.marks.get_mut(&ref_id) {
                         if *mark == Mark::Unreachable {
-                            *mark = if is_direct { Mark::Reachable } else { Mark::MaybeReachable };
-                            queue.push_back((ref_id, false));
+                            *mark = Mark::MaybeReachable;
+                            queue.push_back(ref_id);
                         }
                     }
                 }
